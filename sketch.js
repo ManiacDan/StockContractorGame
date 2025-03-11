@@ -159,7 +159,7 @@ const bullNameWords = [
 
 // Legendary bulls with updated price for Chicken on a Chain
 const legendaryBulls = [
-  { name: "Bodacious", ageWeeks: 260, overallRating: 95, color: "Yellow", weight: 1900, price: 1000 },
+  { name: "Bodacious", ageWeeks: 260, overallRating: 95, color: "Yellow", weight: 1900, price: 95000 },
   { name: "Bruiser", ageWeeks: 260, overallRating: 95, color: "Brown", weight: 1700, price: 95000 },
   { name: "Bushwacker", ageWeeks: 260, overallRating: 95, color: "Red with White Face", weight: 1800, price: 100000 },
   { name: "Chicken on a Chain", ageWeeks: 260, overallRating: 95, color: "Brown & White", weight: 2100, price: 70000 },
