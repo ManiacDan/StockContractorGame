@@ -289,7 +289,7 @@ function setup() {
   trainingWindow.textAlign(LEFT);
 
   // Initialize animation window
-  animationWindow = createGraphics(400, 300);
+  animationWindow = createGraphics(800, 600);
   animationWindow.textSize(16);
   animationWindow.textAlign(CENTER, CENTER);
 }
@@ -346,7 +346,8 @@ if (elapsedTime >= 10) {
   }
 function animateBullAndRider(window, elapsedTime, buckOffTime) {
   window.push();
-  window.translate(200, 200); // Center of the window
+  window.translate(400, 400); // Center in 800x600 window (previously 200, 200 for 400x300)
+  window.scale(1.5); // Scale up by 1.5x to make it more prominent
   
   let rideTime = buckOffTime !== null ? buckOffTime / 1000 : 8;
   let isRiding = elapsedTime < rideTime;
@@ -365,7 +366,7 @@ function animateBullAndRider(window, elapsedTime, buckOffTime) {
     window.ellipse(dustOffset + random(-25, 25), 50 + random(-10, 10), 40 + kickHeight / 2, 20);
   }
   
-  // Draw bull
+  // Draw bull (unchanged from here down, just scaled by window.scale)
   window.push();
   window.rotate(radians(twistAngle));
   window.translate(0, kickHeight);
@@ -375,7 +376,7 @@ function animateBullAndRider(window, elapsedTime, buckOffTime) {
     case "black": bullFill = color(40, 40, 40); break;
     case "red": bullFill = color(150, 50, 50); break;
     case "brown": bullFill = color(139, 69, 19); break;
-    case "white": bullFill = color(200, 200, 200); break; // Adjusted as per previous request
+    case "white": bullFill = color(200, 200, 200); break;
     case "gray": bullFill = color(128, 128, 128); break;
     case "spotted": bullFill = color(200, 200, 200); break;
     case "yellow": bullFill = color(170, 140, 0); break;
@@ -391,7 +392,7 @@ function animateBullAndRider(window, elapsedTime, buckOffTime) {
   window.push();
   window.rotate(radians(rearAngle));
   
-  // Bull body (spotted pattern remains here if "spotted")
+  // Bull body (unchanged from original)
   window.beginShape();
   window.vertex(-35, -5);
   window.bezierVertex(-25, -15, 25, -15, 35, -5);
@@ -506,10 +507,6 @@ function animateBullAndRider(window, elapsedTime, buckOffTime) {
   window.fill(50);
   window.ellipse(-4, 14, 4, 3);
   window.ellipse(4, 14, 4, 3);
-  // Removed the following lines to eliminate spots on the face:
-  // window.fill(100);
-  // window.ellipse(-8, 0, 8, 8);
-  // window.ellipse(8, 5, 6, 6);
   window.pop();
   
   window.pop();
@@ -534,126 +531,109 @@ function animateBullAndRider(window, elapsedTime, buckOffTime) {
   if (isRiding) {
     window.push();
     window.rotate(radians(twistAngle));
-    window.translate(0, kickHeight - 25); // Lower rider slightly to sit on bull
-    window.rotate(radians(rearAngle * 0.6 + headToss * 0.2)); // Lean with bull
-    
-    // Rider body
-    window.fill(210, 140, 90); // Skin color
-    window.noStroke();
-    window.ellipse(0, -20, 12, 12); // Head
-    
-    // Draw face (moved lower to avoid hat overlap)
-    window.fill(255); // White for eyes
-    window.ellipse(-3, -19, 2, 2); // Left eye
-    window.ellipse(3, -19, 2, 2);  // Right eye
-    window.fill(0); // Black for pupils
-    window.ellipse(-3, -19, 1, 1); // Left pupil
-    window.ellipse(3, -19, 1, 1);  // Right pupil
-    window.fill(255, 100, 100); // Pinkish for mouth
-    window.arc(0, -15, 4, 2, 0, PI); // Mouth (smiling)
-    
-    // Cowboy hat (more realistic)
-    window.fill(139, 69, 19); // Brown color
-    // Brim: curved shape
-    window.beginShape();
-    window.vertex(-12, -22);
-    window.bezierVertex(-15, -25, -10, -28, 0, -28); // Left curve
-    window.bezierVertex(10, -28, 15, -25, 12, -22);   // Right curve
-    window.vertex(12, -24);
-    window.bezierVertex(14, -26, 10, -26, 0, -26);    // Inner right curve
-    window.bezierVertex(-10, -26, -14, -26, -12, -24); // Inner left curve
-    window.endShape(CLOSE);
-    // Crown: pinched top
-    window.beginShape();
-    window.vertex(-6, -24); // Left base
-    window.bezierVertex(-5, -30, -2, -32, 0, -32); // Left pinch
-    window.bezierVertex(2, -32, 5, -30, 6, -24);   // Right pinch
-    window.vertex(6, -24);
-    window.line(6, -24, -6, -24); // Connect base
-    window.endShape(CLOSE);
-    
-    // Torso with fixed color from animationTorsoColor
-    window.fill(animationTorsoColor);
-    window.rect(-6, -15, 12, 20); // Torso
-    
-    // Right leg (visible, on bull's right side, viewer's left)
-    window.stroke(139, 69, 19); // Brown pants
-    window.strokeWeight(2);
-    window.line(4, 5, 12, 20);    // Upper right leg (in front of bull)
-    window.line(12, 20, 14, 30);  // Lower right leg
-    // Left leg is obscured by bull's body, not drawn
-    
-    // Leather chaps (right side visible only)
-    window.fill(chapsColor);
-    window.noStroke();
-    window.beginShape();
-    window.vertex(4, 5);   // Right leg top (inner)
-    window.vertex(12, 25); // Right leg bottom right
-    window.vertex(6, 25);  // Right leg bottom left
-    window.vertex(2, 5);   // Right leg inner (adjusted)
-    window.endShape(CLOSE);
-    // Left chaps not drawn fully, just a hint at the edge
-    window.beginShape();
-    window.vertex(-4, 5);  // Left leg top (inner, partially visible)
-    window.vertex(-6, 15); // Left leg bottom (cut off by bull)
-    window.vertex(-2, 15); // Left leg inner (cut off by bull)
-    window.vertex(-2, 5);  // Left leg inner top
-    window.endShape(CLOSE);
-    
-    // Right arm (relaxed, no rope)
-    window.stroke(animationTorsoColor);
-    window.strokeWeight(2);
-    window.line(6, -15, 12, -5); // Upper arm
-    window.line(12, -5, 10, 5);  // Forearm
-    
-    // Left arm (in the air)
-    window.line(-6, -15, -12, -25); // Upper arm
-    window.line(-12, -25, -15 + sin(elapsedTime * PI * 2) * 5, -35); // Forearm waving
-    
-    window.noStroke();
-    window.pop();
-  } else if (elapsedTime < rideTime + 2) { // Rider falling
-    let fallTime = elapsedTime - rideTime;
-    window.push();
-    window.translate(40 + fallTime * 50, -30 + fallTime * 70); // Fall right and down
-    window.rotate(radians(fallTime * 150)); // Tumble
+    window.translate(0, kickHeight - 25);
+    window.rotate(radians(rearAngle * 0.6 + headToss * 0.2));
     
     window.fill(210, 140, 90);
     window.noStroke();
-    window.ellipse(0, -20, 12, 12); // Head
+    window.ellipse(0, -20, 12, 12);
     
-    // Draw face during fall (moved lower)
-    window.fill(255); // White for eyes
-    window.ellipse(-3, -19, 2, 2); // Left eye
-    window.ellipse(3, -19, 2, 2);  // Right eye
-    window.fill(0); // Black for pupils
-    window.ellipse(-3, -19, 1, 1); // Left pupil
-    window.ellipse(3, -19, 1, 1);  // Right pupil
-    window.fill(255, 100, 100); // Pinkish for mouth
-    window.arc(0, -15, 4, 2, PI, 0); // Mouth (open, surprised)
+    window.fill(255);
+    window.ellipse(-3, -19, 2, 2);
+    window.ellipse(3, -19, 2, 2);
+    window.fill(0);
+    window.ellipse(-3, -19, 1, 1);
+    window.ellipse(3, -19, 1, 1);
+    window.fill(255, 100, 100);
+    window.arc(0, -15, 4, 2, 0, PI);
     
-    // Cowboy hat (more realistic)
-    window.fill(139, 69, 19); // Brown color
-    // Brim: curved shape
+    window.fill(139, 69, 19);
     window.beginShape();
     window.vertex(-12, -22);
-    window.bezierVertex(-15, -25, -10, -28, 0, -28); // Left curve
-    window.bezierVertex(10, -28, 15, -25, 12, -22);   // Right curve
+    window.bezierVertex(-15, -25, -10, -28, 0, -28);
+    window.bezierVertex(10, -28, 15, -25, 12, -22);
     window.vertex(12, -24);
-    window.bezierVertex(14, -26, 10, -26, 0, -26);    // Inner right curve
-    window.bezierVertex(-10, -26, -14, -26, -12, -24); // Inner left curve
+    window.bezierVertex(14, -26, 10, -26, 0, -26);
+    window.bezierVertex(-10, -26, -14, -26, -12, -24);
     window.endShape(CLOSE);
-    // Crown: pinched top
     window.beginShape();
-    window.vertex(-6, -24); // Left base
-    window.bezierVertex(-5, -30, -2, -32, 0, -32); // Left pinch
-    window.bezierVertex(2, -32, 5, -30, 6, -24);   // Right pinch
+    window.vertex(-6, -24);
+    window.bezierVertex(-5, -30, -2, -32, 0, -32);
+    window.bezierVertex(2, -32, 5, -30, 6, -24);
     window.vertex(6, -24);
-    window.line(6, -24, -6, -24); // Connect base
+    window.line(6, -24, -6, -24);
     window.endShape(CLOSE);
     
     window.fill(animationTorsoColor);
-    window.rect(-6, -15, 12, 20); // Torso
+    window.rect(-6, -15, 12, 20);
+    
+    window.stroke(139, 69, 19);
+    window.strokeWeight(2);
+    window.line(4, 5, 12, 20);
+    window.line(12, 20, 14, 30);
+    
+    window.fill(chapsColor);
+    window.noStroke();
+    window.beginShape();
+    window.vertex(4, 5);
+    window.vertex(12, 25);
+    window.vertex(6, 25);
+    window.vertex(2, 5);
+    window.endShape(CLOSE);
+    window.beginShape();
+    window.vertex(-4, 5);
+    window.vertex(-6, 15);
+    window.vertex(-2, 15);
+    window.vertex(-2, 5);
+    window.endShape(CLOSE);
+    
+    window.stroke(animationTorsoColor);
+    window.strokeWeight(2);
+    window.line(6, -15, 12, -5);
+    window.line(12, -5, 10, 5);
+    window.line(-6, -15, -12, -25);
+    window.line(-12, -25, -15 + sin(elapsedTime * PI * 2) * 5, -35);
+    
+    window.noStroke();
+    window.pop();
+  } else if (elapsedTime < rideTime + 2) {
+    let fallTime = elapsedTime - rideTime;
+    window.push();
+    window.translate(40 + fallTime * 50, -30 + fallTime * 70);
+    window.rotate(radians(fallTime * 150));
+    
+    window.fill(210, 140, 90);
+    window.noStroke();
+    window.ellipse(0, -20, 12, 12);
+    
+    window.fill(255);
+    window.ellipse(-3, -19, 2, 2);
+    window.ellipse(3, -19, 2, 2);
+    window.fill(0);
+    window.ellipse(-3, -19, 1, 1);
+    window.ellipse(3, -19, 1, 1);
+    window.fill(255, 100, 100);
+    window.arc(0, -15, 4, 2, PI, 0);
+    
+    window.fill(139, 69, 19);
+    window.beginShape();
+    window.vertex(-12, -22);
+    window.bezierVertex(-15, -25, -10, -28, 0, -28);
+    window.bezierVertex(10, -28, 15, -25, 12, -22);
+    window.vertex(12, -24);
+    window.bezierVertex(14, -26, 10, -26, 0, -26);
+    window.bezierVertex(-10, -26, -14, -26, -12, -24);
+    window.endShape(CLOSE);
+    window.beginShape();
+    window.vertex(-6, -24);
+    window.bezierVertex(-5, -30, -2, -32, 0, -32);
+    window.bezierVertex(2, -32, 5, -30, 6, -24);
+    window.vertex(6, -24);
+    window.line(6, -24, -6, -24);
+    window.endShape(CLOSE);
+    
+    window.fill(animationTorsoColor);
+    window.rect(-6, -15, 12, 20);
     
     window.fill(chapsColor);
     window.beginShape();
@@ -677,8 +657,8 @@ function animateBullAndRider(window, elapsedTime, buckOffTime) {
     window.line(-12, -25, -15, -35);
     
     window.stroke(139, 69, 19);
-    window.line(-4, 5, -12, 20); // Left leg
-    window.line(4, 5, 12, 20);   // Right leg
+    window.line(-4, 5, -12, 20);
+    window.line(4, 5, 12, 20);
     
     window.noStroke();
     window.pop();
@@ -940,12 +920,12 @@ function animateBullAndRider(window, elapsedTime, buckOffTime) {
     
     animationWindow.background(240);
     animationWindow.fill(0);
-    animationWindow.text(`${animationEventName}`, 200, 20);
-    animationWindow.text(`${animationRiderName} vs ${gameState.bulls.find(b => b.color === animationBullColor).name}`, 200, 40);
+    animationWindow.text(`${animationEventName}`, 400, 20);
+    animationWindow.text(`${animationRiderName} vs ${gameState.bulls.find(b => b.color === animationBullColor).name}`, 400, 40);
     
     // Draw stopwatch
     animationWindow.fill(255, 0, 0);
-    animationWindow.text(`Time: ${rideTime.toFixed(1)}s`, 200, 60);
+    animationWindow.text(`Time: ${rideTime.toFixed(1)}s`, 400, 60);
     
     // Animate bull and rider
     animateBullAndRider(animationWindow, elapsedTime, buckOffTime);
@@ -1032,63 +1012,33 @@ function drawBull(x, y, bullColor, scaleFactor = 1, animate = true) {
   pop();
 }
 
-function animateBullAndRider(window, elapsedTime, buckOffTime) {
-  window.push();
-  window.translate(200, 200); // Center of the window
-  
-  let rideTime = buckOffTime !== null ? buckOffTime / 1000 : 8;
-  let isRiding = elapsedTime < rideTime;
-  
-  // Bull animation parameters
-  let spinAngle = elapsedTime * 180; // Spin 180 degrees per second
-  let kickHeight = sin(elapsedTime * PI * 2) * 10; // Kick up/down every 0.5s
-  let buckAngle = sin(elapsedTime * PI) * 15; // Bucking motion
-  
-  // Draw bull
-  window.push();
-  window.rotate(radians(spinAngle));
-  window.translate(0, kickHeight);
-  drawBull(0, 0, animationBullColor, 1, false); // Use existing drawBull with no animation
-  window.rotate(radians(buckAngle));
-  window.pop();
-  
-  // Draw rider (simple stick figure)
-  if (isRiding) {
-    window.push();
-    window.rotate(radians(spinAngle));
-    window.translate(0, kickHeight - 20);
-    window.rotate(radians(buckAngle));
-    window.stroke(0);
-    window.strokeWeight(2);
-    window.line(0, -10, 0, 10); // Body
-    window.line(0, -10, -5, -15); // Left arm
-    window.line(0, -10, 5, -15); // Right arm
-    window.line(0, 10, -5, 15); // Left leg
-    window.line(0, 10, 5, 15); // Right leg
-    window.fill(210, 140, 90); // Skin color
-    window.noStroke();
-    window.ellipse(0, -15, 10, 10); // Head
-    window.pop();
-  } else if (elapsedTime < rideTime + 2) { // Rider falling for 2 seconds after buck-off
-    let fallTime = elapsedTime - rideTime;
-    window.push();
-    window.translate(20 + fallTime * 30, -20 + fallTime * 50); // Fall to the right and down
-    window.rotate(radians(fallTime * 90)); // Tumble
-    window.stroke(0);
-    window.strokeWeight(2);
-    window.line(0, -10, 0, 10);
-    window.line(0, -10, -5, -15);
-    window.line(0, -10, 5, -15);
-    window.line(0, 10, -5, 15);
-    window.line(0, 10, 5, 15);
-    window.fill(210, 140, 90);
-    window.noStroke();
-    window.ellipse(0, -15, 10, 10);
-    window.pop();
+  // Animation window (full screen)
+  if (showingAnimation) {
+    let elapsedTime = (millis() - animationStartTime) / 1000; // Time in seconds
+    let rideTime = Math.min(elapsedTime, buckOffTime !== null ? buckOffTime / 1000 : 8);
+    
+    animationWindow.background(240); // Light gray background
+    animationWindow.fill(0);
+    animationWindow.text(`${animationEventName}`, 400, 50); // Adjusted for larger window
+    animationWindow.text(`${animationRiderName} vs ${gameState.bulls.find(b => b.color === animationBullColor).name}`, 400, 100);
+    
+    // Draw stopwatch
+    animationWindow.fill(255, 0, 0);
+    animationWindow.text(`Time: ${rideTime.toFixed(1)}s`, 400, 150);
+    
+    // Animate bull and rider (centered in larger window)
+    animateBullAndRider(animationWindow, elapsedTime, buckOffTime);
+    
+    // Display animation window over the entire screen
+    image(animationWindow, 0, 0); // Top-left corner, full size
+    
+    // Close after 10 seconds
+    if (elapsedTime >= 10) {
+      showingAnimation = false;
+      gameState.message = gameState.pendingMessage; // Transfer the result
+      gameState.pendingMessage = ""; // Clear pending message
+    }
   }
-  
-  window.pop();
-}
 
 function mousePressed() {
   if (gameState.selectedBull !== null) {
